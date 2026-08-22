@@ -26,7 +26,8 @@ static constexpr uintptr_t kSetupWProj   = 0x004BECF0;
 static constexpr uintptr_t kGetSphere    = 0x0082C2C0;
 static constexpr uintptr_t kDeviceGlobal = 0x00C5DF88;
 static constexpr uintptr_t kD3DDevOff    = 0x397C;
-static constexpr uintptr_t kCharCreateFrm = 0x00B6B184;   // frame global: active on charcreate
+static constexpr uintptr_t kCharCreateFrm = 0x00B6B184;   // charcreate frame global
+static constexpr uintptr_t kCharSelectFrm = 0x00B6B1FC;   // charselect frame global (VERIFIED)
 static constexpr uint32_t  kDipSlot      = 82;            // IDirect3DDevice9::DrawIndexedPrimitive
 
 enum { kOffCtxInstance = 0x60 };
@@ -96,10 +97,55 @@ static float s_raceScale   = 1.0f;
 static float s_rotBase[16];
 static float s_lastWritten[16];
 
-// active only on the character-create screen
-static bool IsCharCreateScreen()
+// active only on the character-create screen.
+//
+// v181 used [frame + 0x2A0] (frame's model field) as the screen signal — WRONG: the
+// field persists after leaving the screen, so the gate stayed open in the world and
+// the module scaled the world player's placement -> invisible/flicker.
+// v183 used [frame + 0x2A4] (frame's camera handle) — ALSO persists in world on this
+// client (the "freed on screen leave" note does not hold for the charcreate frame).
+//
+// v184 DEFINITIVE gate — content-based, immune to every stale global:
+//   A world unit's placement matrix carries its world coordinates in the TRANSLATION
+//   row (pl[12..14] != 0). A glue character sits at IDENTITY placement (translation
+//   ~0) — VERIFIED in the v96-117 era ("placement IDENTITY on charselect/charcreate").
+//   So "translation ~ 0 AND attachment 29" can only be true for the glue character.
+//   Even if every frame/camera global is stale, a world player can NEVER pass it.
+//   The FOV hook additionally restricts SetupWorldProjection to exactly the charcreate
+//   camera; and a placement write is refused unless the current translation is ~0.
+
+static bool HasAttachment29(void* model);
+
+// the charcreate camera handle at [frame + 0x2A4] — the ACTIVE camera signal.
+// Both glue screens (charselect [0xB6B1FC], charcreate [0xB6B184]) show character M2s
+// at identity placement, so the placement gate alone cannot tell them apart. The
+// cameras are DIFFERENT handles per frame (VERIFIED Camera.yaml), so we carry which
+// camera is active from SetupWorldProjection: the FOV hook sees the camera each call
+// and sets s_onCharCreate = (cam == charcreate camera). World/charselect cameras
+// clear it, so placement writes only happen on the charcreate screen.
+static void* CharCreateCamera()
 {
-    __try { return *(void**)kCharCreateFrm != nullptr; } __except(1) { return false; }
+    __try {
+        void* frm = *(void**)kCharCreateFrm;
+        if (!frm) return nullptr;
+        return *(void**)((char*)frm + 0x2A4);
+    } __except(1) { return nullptr; }
+}
+
+static bool s_onCharCreate = false;   // updated every SetupWorldProjection call
+
+// placement is (approximately) identity -> a glue character, not a world unit
+static bool IsGluePlacement(const float* pl)
+{
+    return pl[12] > -0.01f && pl[12] < 0.01f
+        && pl[13] > -0.01f && pl[13] < 0.01f
+        && pl[14] > -0.01f && pl[14] < 0.01f;
+}
+
+static bool IsCharCreateModel(void* model)
+{
+    if (!model || !s_onCharCreate) return false;   // must be on the charcreate screen
+    return HasAttachment29(model);                 // must be a character M2
 }
 
 static uint32_t HashModelName(void* model)
@@ -231,14 +277,16 @@ static bool EngineChangedMatrix(const float* pl)
 
 static void __fastcall HookedDrawTri(void* ctx, void* edx)
 {
-    if (ctx && IsCharCreateScreen())
+    if (ctx)
     {
         void* inst = nullptr;
         __try { inst = *(void**)((char*)ctx + kOffCtxInstance); } __except(1) {}
         if (inst) {
             void* model = nullptr;
             __try { model = *(void**)((char*)inst + kOffInstModel); } __except(1) {}
-            if (model && HasAttachment29(model)) {
+            if (model && IsCharCreateModel(model)) {
+                float* pl = (float*)((char*)inst + kOffInstPlacement);
+                if (!IsGluePlacement(pl)) goto drawnotchar;   // world unit: NEVER touch
                 s_inst = inst;
                 if (HashModelName(model) != s_nativeNameHash) {
                     ResetForRace(inst, model);
@@ -247,16 +295,17 @@ static void __fastcall HookedDrawTri(void* ctx, void* edx)
             }
         }
     }
+    drawnotchar:
     if (g_origDraw) g_origDraw(ctx, edx);
 }
 
 static void __fastcall HookedSetupWProj(void* cam, void* edx, void* vb, int flag)
 {
-    if (cam && IsCharCreateScreen()) {
-        static void* s_baseCam = nullptr;
+    // which camera is active this render? charcreate camera -> on charcreate.
+    s_onCharCreate = (cam != nullptr) && (cam == CharCreateCamera());
+    if (s_onCharCreate) {
+        static bool s_baseSet = false;
         static float s_baseFov = 0.0f;
-        static bool  s_baseSet = false;
-        if (cam != s_baseCam) { s_baseCam = cam; s_baseSet = false; }
         if (!s_baseSet) { __try { s_baseFov = *(float*)((char*)cam + kOffCamFov); s_baseSet = true; } __except(1) {} }
         if (s_baseSet && s_baseFov > 0.01f && s_baseFov < 3.f) {
             s_zoom = 1.0f + (s_raceMaxZoom - 1.0f) * s_t;
@@ -272,11 +321,13 @@ static void __fastcall HookedSetupWProj(void* cam, void* edx, void* vb, int flag
 // only while dragging (engine writes rotation between DrawTri and DIP).
 static long __stdcall HookedDIP(void* dev, int pt, int bv, unsigned mi, unsigned nv, unsigned si, unsigned pc)
 {
-    if (s_inst && IsCharCreateScreen()) {
+    // triple gate: charcreate camera live AND tracked instance valid AND glue placement
+    if (s_inst && s_onCharCreate && CharCreateCamera()) {
         __try {
             void* model = *(void**)((char*)s_inst + kOffInstModel);
-            if (!model || !HasAttachment29(model)) goto skip;
+            if (!model || !IsCharCreateModel(model)) goto skip;
             float* pl = (float*)((char*)s_inst + kOffInstPlacement);
+            if (!IsGluePlacement(pl)) goto skip;   // world unit: NEVER touch
 
             if (IsDragging() && EngineChangedMatrix(pl)) {
                 for (int i = 0; i < 16; ++i) s_rotBase[i] = pl[i];
@@ -311,7 +362,7 @@ static void EnsureDIPHook()
 
 static void __cdecl OnInput(void* user, const void* args)
 {
-    if (!IsCharCreateScreen()) return;
+    if (!CharCreateCamera()) return;
     const auto* a = static_cast<const wxl::events::InputArgs*>(args);
     if (!a || a->message != WM_MOUSEWHEEL) return;
     short d = (short)HIWORD(a->wparam);
@@ -323,7 +374,13 @@ static void __cdecl OnInput(void* user, const void* args)
 
 static void __cdecl OnFrame(void* user, const void* args)
 {
-    if (!IsCharCreateScreen()) return;
+    // Not on charcreate (camera handle gone or a different camera is active):
+    // make the module fully inert — no placement writes anywhere outside charcreate.
+    if (!CharCreateCamera()) {
+        s_onCharCreate = false;
+        s_inst = nullptr;
+        return;
+    }
     // ease t toward the wheel goal (frame-rate independent exponential smoothing):
     // a wheel notch lands as a ~0.2s glide, not a jump
     static DWORD lastTick = 0;
