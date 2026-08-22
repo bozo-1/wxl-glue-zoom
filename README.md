@@ -36,18 +36,13 @@ chest perfectly composed, no matter how close you go.
 - **Scoped** — only activates on the character customization screen; does nothing in the
   world, menus, or character select.
 ---
-  
-## ✨ Note
-
-- **Known limitation** — The module currently only works with the custom interface and models attached that you can get from here https://drive.google.com/drive/u/3/folders/1CoWJfj5BoaNI8ZoeS2QdAEtcPfq3dbHK
-
----
 
 ## 📦 Installation
 
 1. Download the latest `wxl-glue-zoom.dll` from the [Releases](https://github.com/bozo-1/wxl-glue-zoom/releases) page.
 2. Copy it into your client's `Extensions/wxl-glue-zoom/` folder.
 3. Launch the client and open the character creation screen — scroll to zoom.
+- **Known limitation** — The module currently only works with the custom interface and models attached that you can get from here https://drive.google.com/drive/u/3/folders/1CoWJfj5BoaNI8ZoeS2QdAEtcPfq3dbHK
 
 The module is discovered and loaded by the WarcraftXL extension system; no configuration
 needed.
