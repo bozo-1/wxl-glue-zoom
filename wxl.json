@@ -26,7 +26,9 @@
     "title": "Glue Zoom",
     "tagline": "Mouse-wheel zoom with per-race head framing on the character customization screen.",
     "description": "store/description.md",
-    "gallery": [],
+    "gallery": [
+      "store/gallery/zoom.mp4",
+    ],
     "categories": ["interface", "ui", "quality-of-life"],
     "accent": "#7aa2f7"
   },
