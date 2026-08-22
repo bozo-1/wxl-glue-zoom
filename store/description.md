@@ -1,3 +1,7 @@
+
+
+https://github.com/user-attachments/assets/10ea7399-c25c-4e4c-b643-939a2c521954
+
 # Glue Zoom
 
 Scroll-wheel zoom on the character customization screen, with head-and-chest framing tuned per race.
