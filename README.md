@@ -1,5 +1,5 @@
 <p align="center">
-  <video src="https://github.com/bozo-1/wxl-glue-zoom/raw/main/store/gallery/zoom.mp4" width="720" autoplay muted loop controls></video>
+  <a href="https://www.youtube.com/watch?v=MWJ0d1fds5Q"><img src="https://img.youtube.com/vi/MWJ0d1fds5Q/hqdefault.jpg" width="640" alt="Watch the demo video"></a>
 </p>
 
 # wxl-glue-zoom
