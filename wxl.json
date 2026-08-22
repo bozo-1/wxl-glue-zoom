@@ -27,7 +27,7 @@
     "tagline": "Mouse-wheel zoom with per-race head framing on the character customization screen.",
     "description": "store/description.md",
     "gallery": [
-      "store/gallery/zoom.mp4",
+      "store/gallery/preview.gif",
     ],
     "categories": ["interface", "ui", "quality-of-life"],
     "accent": "#7aa2f7"
