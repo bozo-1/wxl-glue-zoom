@@ -1,6 +1,7 @@
-<p align="center">
-  <a href="https://www.youtube.com/watch?v=MWJ0d1fds5Q"><img src="https://img.youtube.com/vi/MWJ0d1fds5Q/hqdefault.jpg" width="640" alt="Watch the demo video"></a>
-</p>
+
+
+https://github.com/user-attachments/assets/f8da7962-46ea-4207-8387-62a29ce84322
+
 
 # wxl-glue-zoom
 
