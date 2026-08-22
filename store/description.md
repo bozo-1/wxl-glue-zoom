@@ -1,10 +1,6 @@
-<div align="center">
-
-# 🔍 WXL Glue Zoom
-
 **Scroll-wheel zoom for the character customization screen**
 
-</div>
+
 
 In the stock client the character creation screen is fixed at one distance — you can't
 zoom in for a closer look at your character's face, gear, or details. This module adds
