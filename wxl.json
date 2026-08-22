@@ -11,7 +11,9 @@
     "conflicts": [],
 
     "hooks": [
-      { "target": "M2.DrawBatch" }
+      { "target": "M2.DrawBatch" },
+      { "target": "GlueZoom.SetupWorldProjection" },
+      { "target": "GlueZoom.DrawIndexedPrimitive" }
     ]
   },
 

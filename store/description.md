@@ -4,8 +4,6 @@
 
 **Scroll-wheel zoom for the character customization screen**
 
-<video src="https://github.com/user-attachments/assets/10ea7399-c25c-4e4c-b643-939a2c521954" width="640" controls></video>
-
 </div>
 
 In the stock client the character creation screen is fixed at one distance — you can't
@@ -25,6 +23,10 @@ no matter how close you go.
   rotation. Zoom stays where you set it.
 - **Scoped** — only activates on the character customization screen; does nothing in the
   world, menus, or character select.
+
+## Installation
+
+Just click **Install** — the hub downloads, deploys, and manages the module for you.
 
 ## Requirements
 
