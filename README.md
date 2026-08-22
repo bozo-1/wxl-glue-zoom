@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="store/cover.png" alt="wxl-glue-zoom" width="640">
+  <video src="store/gallery/zoom.mp4" width="720" autoplay muted loop>
 </p>
 
 # wxl-glue-zoom

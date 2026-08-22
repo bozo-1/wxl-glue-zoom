@@ -11,8 +11,7 @@
     "conflicts": [],
 
     "hooks": [
-      { "target": "M2.DrawBatch" },
-      { "target": "M2.CameraSetup" }
+      { "target": "M2.DrawBatch" }
     ]
   },
 
@@ -25,7 +24,6 @@
     "title": "Glue Zoom",
     "tagline": "Mouse-wheel zoom with per-race head framing on the character customization screen.",
     "description": "store/description.md",
-    "cover": "store/cover.png",
     "gallery": [],
     "categories": ["interface", "ui", "quality-of-life"],
     "accent": "#7aa2f7"
