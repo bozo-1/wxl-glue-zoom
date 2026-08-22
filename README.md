@@ -1,7 +1,6 @@
-
-
-https://github.com/user-attachments/assets/f8da7962-46ea-4207-8387-62a29ce84322
-
+<p align="center">
+  <video src="https://github.com/user-attachments/assets/f8da7962-46ea-4207-8387-62a29ce84322" width="720" controls></video>
+</p>
 
 # wxl-glue-zoom
 
@@ -12,7 +11,7 @@ closer look at your character's face, gear, or details. This module adds smooth 
 with intelligent framing that keeps each race's head and chest perfectly composed, no matter how
 close you go.
 
-## How it works
+## Features
 
 - **Scroll wheel** — smoothly zooms in and out, with a uniform glide so every notch feels continuous.
 - **Per-race framing** — each of the 20 race/gender pairs was calibrated visually so the head and chest
@@ -20,7 +19,7 @@ close you go.
   the framing tracks the zoom at every step.
 - **Rotation** — click-drag to rotate the character while zoomed in, exactly like the native rotation.
   Zoom stays where you set it.
-- **Clean** — only activates on the character customization screen; does nothing in the world or menus.
+- **Scoped** — only activates on the character customization screen; does nothing in the world or menus.
 
 ## Requirements
 
