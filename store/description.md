@@ -26,11 +26,6 @@ no matter how close you go.
 - **Scoped** — only activates on the character customization screen; does nothing in the
   world, menus, or character select.
 
-## Installation
-
-Download the latest `wxl-glue-zoom.dll` from the Releases page and copy it into your
-client's `Extensions/wxl-glue-zoom/` folder. No configuration needed.
-
 ## Requirements
 
 WarcraftXL on a 3.3.5a client, build **12340**.
