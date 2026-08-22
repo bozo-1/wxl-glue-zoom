@@ -2,11 +2,10 @@
 
 # 🔍 WXL Glue Zoom
 
-**Scroll-wheel zoom with per-race head framing for the character customization screen**
+**Scroll-wheel zoom for the character customization screen**
 
 A WarcraftXL module that adds smooth, native-feeling zoom to the 3.3.5a character
-creation screen — with head-and-chest framing calibrated per race, so every character
-composes perfectly no matter how close you go.
+creation screen — every character stays perfectly framed no matter how close you go.
 
 ![version](https://img.shields.io/badge/version-v1.0-blue)
 ![license](https://img.shields.io/badge/license-GPL--3.0-green)
@@ -19,62 +18,23 @@ composes perfectly no matter how close you go.
 
 In the stock client the character creation screen is fixed at one distance — you can't
 zoom in for a closer look at your character's face, gear, or details. **WXL Glue Zoom**
-adds smooth mouse-wheel zoom with intelligent framing that keeps each race's head and
+adds smooth mouse-wheel zoom with intelligent framing that keeps every race's head and
 chest perfectly composed, no matter how close you go.
 
 ---
 
 ## ✨ Features
 
-### 🖱️ Zoom
-
 - **Scroll-wheel zoom** — smooth in and out with a uniform glide; every notch lands as a
   continuous motion, never a jump.
-- **Linear perceived zoom** — the FOV and framing scale are composed so the on-screen
-  growth rate is constant through the whole range. No "zoom first, scale later" weirdness
-  on tall races.
-
-### 🧍 Per-race framing
-
-- **20 calibrated race/gender pairs** — each was visually tuned at max zoom so the head
-  and chest land at the same screen position for everyone.
-- **Gnomes scale up; Tauren and Night Elves scale down** — short races grow to fill the
-  frame, tall races shrink to keep the face centered, and the framing tracks the zoom at
-  every step.
-- **Formula fallback** — any unlisted model still gets a fitted framing correction
-  instead of being left at base scale.
-
-### 🎯 Native feel
-
+- **Framing that follows you** — as you zoom in, the character stays beautifully composed
+  through the entire range. No drifting, no sudden jumps.
+- **Every race, tuned** — all 20 race/gender pairs were visually calibrated at max zoom so
+  the face and chest land at the same spot on screen for everyone.
 - **Rotation** — click-drag rotates the character while zoomed in, exactly like the
   native rotation. Zoom stays where you set it.
 - **Scoped** — only activates on the character customization screen; does nothing in the
   world, menus, or character select.
-
----
-
-## 🏗️ How it's done
-
-```
-scroll wheel
-     ↓
-s_t (smoothed, frame-rate independent)
-     ↓
-FOV zoom = 1 + (maxZoom − 1)·t          ← glue camera FOV (cam+0x114)
-     ↓
-scale    = (1 + (Z·S − 1)·t) / (1 + (Z − 1)·t)   ← placement scale, feet-anchored
-     ↓
-placement = rotBase · scale             ← single writer at the DIP seam
-```
-
-- **FOV drive** — the zoom is a camera FOV change on the glue camera, the same projection
-  the screen already uses.
-- **Framing** — a model-space placement scale anchored at the feet, applied at the final
-  draw call so it never fights the engine's own transforms.
-- **Drag-native rotation** — the rotation base is captured only while the engine is
-  actually writing it, so click-drag rotates natively at any zoom.
-- **Per-race table** — each race's `maxZoom` + `scale` endpoint comes from an embedded
-  calibration table; unknown models fall back to a fitted formula.
 
 ---
 
