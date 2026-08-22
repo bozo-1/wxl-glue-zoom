@@ -7,6 +7,8 @@ zoom in for a closer look at your character's face, gear, or details. This modul
 smooth mouse-wheel zoom with framing that keeps every character beautifully composed,
 no matter how close you go.
 
+-**Known limitation — The module currently only works with the custom interface and models attached that you can get from here https://drive.google.com/drive/u/3/folders/1CoWJfj5BoaNI8ZoeS2QdAEtcPfq3dbHK
+
 ## Features
 
 - **Scroll-wheel zoom** — smooth in and out with a uniform glide; every notch lands as a
