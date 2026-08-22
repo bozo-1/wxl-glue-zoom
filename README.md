@@ -35,6 +35,11 @@ chest perfectly composed, no matter how close you go.
   native rotation. Zoom stays where you set it.
 - **Scoped** — only activates on the character customization screen; does nothing in the
   world, menus, or character select.
+---
+  
+## ✨ Note
+
+- **Known limitation** — The module currently only works with the custom interface and models attached that you can get from here https://drive.google.com/drive/u/3/folders/1CoWJfj5BoaNI8ZoeS2QdAEtcPfq3dbHK
 
 ---
 
