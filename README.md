@@ -1,5 +1,5 @@
 <p align="center">
-  <video src="https://raw.githubusercontent.com/bozo-1/wxl-glue-zoom/main/store/gallery/zoom.mp4" width="720" autoplay muted loop>
+  <video src="store/gallery/zoom.mp4" width="720" autoplay muted loop></video>
 </p>
 
 # wxl-glue-zoom
