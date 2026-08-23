@@ -12,7 +12,10 @@ creation screen — every character stays perfectly framed no matter how close y
 ![client](https://img.shields.io/badge/client-3.3.5a%20(12340)-orange)
 ![renderer](https://img.shields.io/badge/renderer-D3D9-red)
 
-<video src="https://github.com/user-attachments/assets/f8da7962-46ea-4207-8387-62a29ce84322" width="720" controls></video>
+
+
+https://github.com/user-attachments/assets/314e35e0-8d90-45e8-a21b-2c9213ce860d
+
 
 </div>
 
